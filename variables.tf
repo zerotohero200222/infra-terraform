@@ -1,33 +1,45 @@
 variable "project_id" {
-  description = "GCP project ID"
-  type        = string
+  type = string
 }
 
 variable "region" {
-  description = "Cloud Run region"
-  type        = string
-  default     = "us-central1"
+  type = string
 }
 
-variable "services" {
-  description = "Map of Cloud Run services"
-  type = map(object({
-    image                 = string
-    allow_unauthenticated = optional(bool)
-    cpu                   = optional(string)
-    memory                = optional(string)
-    min_instances         = optional(number)
-    max_instances         = optional(number)
-    env                   = optional(map(string))
-  }))
+variable "name" {
+  type = string
 }
 
-variable "exchanges_topic_name" {
-  type        = string
-  default     = "exchanges-topic"
+variable "image" {
+  type = string
 }
 
-variable "tracking_topic_name" {
-  type        = string
-  default     = "tracking-topic"
+variable "allow_unauthenticated" {
+  type    = bool
+  default = false
+}
+
+variable "cpu" {
+  type    = string
+  default = null
+}
+
+variable "memory" {
+  type    = string
+  default = null
+}
+
+variable "min_instances" {
+  type    = number
+  default = null
+}
+
+variable "max_instances" {
+  type    = number
+  default = null
+}
+
+variable "env" {
+  type    = map(string)
+  default = {}
 }
