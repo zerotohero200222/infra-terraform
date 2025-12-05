@@ -1,0 +1,33 @@
+steps:
+  - name: hashicorp/terraform:1.6.0
+    id: Terraform Init
+    entrypoint: sh
+    args:
+      - "-c"
+      - |
+        cd infra-terraform
+        terraform init
+
+  - name: hashicorp/terraform:1.6.0
+    id: Terraform Plan
+    entrypoint: sh
+    args:
+      - "-c"
+      - |
+        cd infra-terraform
+        terraform plan -var-file=env/${_ENV}.tfvars -out=tfplan
+
+  - name: hashicorp/terraform:1.6.0
+    id: Terraform Apply
+    entrypoint: sh
+    args:
+      - "-c"
+      - |
+        cd infra-terraform
+        terraform apply -auto-approve tfplan
+
+substitutions:
+  _ENV: "dev"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
