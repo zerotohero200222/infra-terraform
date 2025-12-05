@@ -1,48 +1,48 @@
-project_id = "dev-project-id"
+project_id = "eastern-augury-477909-q6"
 region     = "us-central1"
 
 services = {
   wallet-service = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/wallet-service:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
     min_instances = 0
     max_instances = 3
-    allow_unauthenticated = false
+    allow_unauthenticated = true
   }
 
   portfolio-service = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/portfolio-service:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
     min_instances = 0
     max_instances = 3
   }
 
   status-service = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/status-service:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
     min_instances = 0
     max_instances = 2
   }
 
   aggregator-service = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/aggregator-service:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
   }
 
   frontend-app = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/frontend-app:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
     allow_unauthenticated = true
   }
 
   defi-service = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/defi-service:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
   }
 
   coinbase-service = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/coinbase-service:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
   }
 
   kucoin-service = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/kucoin-service:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
   }
 
   tracking-service = {
-    image = "us-central1-docker.pkg.dev/dev-project-id/blockstats/tracking-service:latest"
+    image = "us-docker.pkg.dev/cloudrun/container/hello:latest"
   }
 }
