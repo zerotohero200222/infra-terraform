@@ -1,33 +1,39 @@
 steps:
-  - name: hashicorp/terraform:1.6.0
+  - name: hashicorp/terraform:1.5.0
     id: Terraform Init
     entrypoint: sh
     args:
-      - "-c"
+      - -c
       - |
         cd infra-terraform
-        terraform init
+        terraform init -input=false
 
-  - name: hashicorp/terraform:1.6.0
+  - name: hashicorp/terraform:1.5.0
     id: Terraform Plan
     entrypoint: sh
     args:
-      - "-c"
+      - -c
       - |
         cd infra-terraform
-        terraform plan -var-file=env/${_ENV}.tfvars -out=tfplan
+        terraform plan \
+          -input=false \
+          -var-file="env/${_ENV}.tfvars" \
+          -out=tfplan
 
-  - name: hashicorp/terraform:1.6.0
+  - name: hashicorp/terraform:1.5.0
     id: Terraform Apply
     entrypoint: sh
     args:
-      - "-c"
+      - -c
       - |
         cd infra-terraform
-        terraform apply -auto-approve tfplan
+        terraform apply -input=false -auto-approve tfplan
+        terraform output
 
 substitutions:
-  _ENV: "dev"
+  _ENV: dev
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
+timeout: 600s
