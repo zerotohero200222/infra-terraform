@@ -1,45 +1,51 @@
 variable "project_id" {
-  type = string
+  description = "GCP project ID"
+  type        = string
 }
 
 variable "region" {
-  type = string
+  description = "GCP region for Cloud Run"
+  type        = string
+  default     = "us-central1"
 }
 
-variable "name" {
-  type = string
+variable "services" {
+  description = <<EOT
+Map of Cloud Run services to deploy.
+
+Key   = logical service name (also used as Cloud Run service name)
+Value = {
+  image                = container image
+  allow_unauthenticated = optional(bool)
+  cpu                  = optional(string)
+  memory               = optional(string)
+  min_instances        = optional(number)
+  max_instances        = optional(number)
+  env                  = optional(map(string))
+}
+EOT
+
+  type = map(object({
+    image                 = string
+    allow_unauthenticated = optional(bool)
+    cpu                   = optional(string)
+    memory                = optional(string)
+    min_instances         = optional(number)
+    max_instances         = optional(number)
+    env                   = optional(map(string))
+  }))
 }
 
-variable "image" {
-  type = string
+# Pub/Sub topic names
+variable "exchanges_topic_name" {
+  type        = string
+  default     = "exchanges-topic"
+  description = "Pub/Sub topic for Exchanges"
 }
 
-variable "allow_unauthenticated" {
-  type    = bool
-  default = false
+variable "tracking_topic_name" {
+  type        = string
+  default     = "tracking-topic"
+  description = "Pub/Sub topic for Tracking"
 }
 
-variable "cpu" {
-  type    = string
-  default = null
-}
-
-variable "memory" {
-  type    = string
-  default = null
-}
-
-variable "min_instances" {
-  type    = number
-  default = null
-}
-
-variable "max_instances" {
-  type    = number
-  default = null
-}
-
-variable "env" {
-  type    = map(string)
-  default = {}
-}
