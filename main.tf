@@ -1,53 +1,57 @@
-############################################
-# Enable APIs
-############################################
-resource "google_project_service" "apis" {
-  for_each = toset([
-    "run.googleapis.com",
-    "pubsub.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "artifactregistry.googleapis.com",
-    "logging.googleapis.com",
-    "iam.googleapis.com"
-  ])
-
-  project             = var.project_id
-  service             = each.key
-  disable_on_destroy  = false
+locals {
+  effective_cpu           = var.cpu == null ? "1" : var.cpu
+  effective_memory        = var.memory == null ? "512Mi" : var.memory
+  effective_min_instances = var.min_instances == null ? 0 : var.min_instances
+  effective_max_instances = var.max_instances == null ? 5 : var.max_instances
+  effective_env           = var.env != null ? var.env : {}
 }
 
-############################################
-# Pub/Sub Topics
-############################################
-module "exchanges_topic" {
-  source     = "./modules/pubsub_topic"
-  topic_id   = var.exchanges_topic_name
-  project_id = var.project_id
+resource "google_cloud_run_v2_service" "service" {
+  name     = var.name
+  location = var.region
+  project  = var.project_id
+
+  template {
+    containers {
+      image = var.image
+
+      resources {
+        limits = {
+          cpu    = local.effective_cpu
+          memory = local.effective_memory
+        }
+      }
+
+      dynamic "env" {
+        for_each = local.effective_env
+        content {
+          name  = env.key
+          value = env.value
+        }
+      }
+    }
+
+    scaling {
+      min_instance_count = local.effective_min_instances
+      max_instance_count = local.effective_max_instances
+    }
+  }
+
+  ingress = "INGRESS_TRAFFIC_ALL"
+
+  traffic {
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+    percent = 100
+  }
 }
 
-module "tracking_topic" {
-  source     = "./modules/pubsub_topic"
-  topic_id   = var.tracking_topic_name
-  project_id = var.project_id
-}
+resource "google_cloud_run_v2_service_iam_member" "invoker" {
+  count = var.allow_unauthenticated ? 1 : 0
 
-############################################
-# Cloud Run Services (API + Integration + Tracking)
-############################################
-module "cloud_run_services" {
-  for_each  = var.services
-  source    = "./modules/cloud_run_service"
+  project  = var.project_id
+  location = var.region
+  name     = google_cloud_run_v2_service.service.name
 
-  project_id = var.project_id
-  region     = var.region
-
-  name       = each.key
-  image      = each.value.image
-
-  allow_unauthenticated = try(each.value.allow_unauthenticated, false)
-  cpu                   = try(each.value.cpu, null)
-  memory                = try(each.value.memory, null)
-  min_instances         = try(each.value.min_instances, null)
-  max_instances         = try(each.value.max_instances, null)
-  env                   = try(each.value.env, {})
+  role   = "roles/run.invoker"
+  member = "allUsers"
 }
