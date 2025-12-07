@@ -1,8 +1,9 @@
 locals {
-  cpu           = var.cpu == null ? "1" : var.cpu
-  memory        = var.memory == null ? "512Mi" : var.memory
-  min_instances = var.min_instances == null ? 0 : var.min_instances
-  max_instances = var.max_instances == null ? 5 : var.max_instances
+  effective_cpu           = var.cpu == null ? "1" : var.cpu
+  effective_memory        = var.memory == null ? "512Mi" : var.memory
+  effective_min_instances = var.min_instances == null ? 0 : var.min_instances
+  effective_max_instances = var.max_instances == null ? 5 : var.max_instances
+  effective_env           = var.env != null ? var.env : {}
 }
 
 resource "google_cloud_run_v2_service" "service" {
@@ -16,13 +17,13 @@ resource "google_cloud_run_v2_service" "service" {
 
       resources {
         limits = {
-          cpu    = local.cpu
-          memory = local.memory
+          cpu    = local.effective_cpu
+          memory = local.effective_memory
         }
       }
 
       dynamic "env" {
-        for_each = var.env
+        for_each = local.effective_env
         content {
           name  = env.key
           value = env.value
@@ -31,8 +32,8 @@ resource "google_cloud_run_v2_service" "service" {
     }
 
     scaling {
-      min_instance_count = local.min_instances
-      max_instance_count = local.max_instances
+      min_instance_count = local.effective_min_instances
+      max_instance_count = local.effective_max_instances
     }
   }
 
@@ -44,7 +45,7 @@ resource "google_cloud_run_v2_service" "service" {
   }
 }
 
-resource "google_cloud_run_v2_service_iam_member" "public" {
+resource "google_cloud_run_v2_service_iam_member" "invoker" {
   count = var.allow_unauthenticated ? 1 : 0
 
   project  = var.project_id
