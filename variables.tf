@@ -4,27 +4,18 @@ variable "project_id" {
 }
 
 variable "region" {
-  description = "GCP region for Cloud Run"
+  description = "GCP region"
   type        = string
   default     = "us-central1"
 }
 
-variable "services" {
-  description = <<EOT
-Map of Cloud Run services to deploy.
-
-Key   = logical service name (also used as Cloud Run service name)
-Value = {
-  image                = container image
-  allow_unauthenticated = optional(bool)
-  cpu                  = optional(string)
-  memory               = optional(string)
-  min_instances        = optional(number)
-  max_instances        = optional(number)
-  env                  = optional(map(string))
+variable "service_account_email" {
+  description = "Service account email for Cloud Run and Pub/Sub"
+  type        = string
 }
-EOT
 
+variable "services" {
+  description = "Map of Cloud Run services and configuration"
   type = map(object({
     image                 = string
     allow_unauthenticated = optional(bool)
@@ -36,16 +27,27 @@ EOT
   }))
 }
 
-# Pub/Sub topic names
 variable "exchanges_topic_name" {
+  description = "Pub/Sub topic for exchanges"
   type        = string
   default     = "exchanges-topic"
-  description = "Pub/Sub topic for Exchanges"
 }
 
 variable "tracking_topic_name" {
+  description = "Pub/Sub topic for tracking"
   type        = string
   default     = "tracking-topic"
-  description = "Pub/Sub topic for Tracking"
+}
+
+variable "exchanges_subscription_name" {
+  description = "Pub/Sub subscription for exchanges"
+  type        = string
+  default     = "exchanges-subscription"
+}
+
+variable "tracking_subscription_name" {
+  description = "Pub/Sub subscription for tracking"
+  type        = string
+  default     = "tracking-subscription"
 }
 
