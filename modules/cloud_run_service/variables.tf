@@ -14,6 +14,11 @@ variable "image" {
   type = string
 }
 
+variable "service_account" {
+  description = "Service account email for Cloud Run"
+  type        = string
+}
+
 variable "allow_unauthenticated" {
   type    = bool
   default = false
