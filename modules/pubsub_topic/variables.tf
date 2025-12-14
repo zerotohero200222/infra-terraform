@@ -1,27 +1,21 @@
 variable "project_id" {
-  type = string
+  type        = string
+  description = "GCP Project ID"
 }
 
 variable "topic_name" {
-  type = string
+  type        = string
+  description = "Name of the Pub/Sub Topic"
 }
 
 variable "subscription_name" {
-  type = string
-}
-
-variable "ack_deadline_seconds" {
-  type    = number
-  default = 10
-}
-
-variable "message_retention_duration" {
-  type    = string
-  default = "604800s"
+  type        = string
+  description = "Name of the Pub/Sub Subscription"
 }
 
 variable "labels" {
-  type    = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
+
 
