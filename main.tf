@@ -23,15 +23,17 @@ resource "google_project_service" "apis" {
 ############################################
 
 module "exchanges_topic" {
-  source     = "./modules/pubsub_topic"
-  topic_id   = var.exchanges_topic_name
-  project_id = var.project_id
+  source            = "./modules/pubsub_topic"
+  project_id        = var.project_id
+  topic_name        = var.exchanges_topic_name
+  subscription_name = var.exchanges_subscription_name
 }
 
 module "tracking_topic" {
-  source     = "./modules/pubsub_topic"
-  topic_id   = var.tracking_topic_name
-  project_id = var.project_id
+  source            = "./modules/pubsub_topic"
+  project_id        = var.project_id
+  topic_name        = var.tracking_topic_name
+  subscription_name = var.tracking_subscription_name
 }
 
 ############################################
@@ -43,7 +45,7 @@ module "exchanges_subscription" {
 
   project_id        = var.project_id
   subscription_name = var.exchanges_subscription_name
-  topic_name        = module.exchanges_topic.name
+  topic_name        = module.exchanges_topic.topic_name
   service_account   = var.service_account_email
 
   depends_on = [module.exchanges_topic]
@@ -54,7 +56,7 @@ module "tracking_subscription" {
 
   project_id        = var.project_id
   subscription_name = var.tracking_subscription_name
-  topic_name        = module.tracking_topic.name
+  topic_name        = module.tracking_topic.topic_name
   service_account   = var.service_account_email
 
   depends_on = [module.tracking_topic]
