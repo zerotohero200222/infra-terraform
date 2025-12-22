@@ -1,13 +1,9 @@
+############################################
+# Terraform & Providers
+############################################
+
 terraform {
   required_version = ">= 1.5.0"
-
-  cloud {
-    organization = "YOUR_TERRAFORM_CLOUD_ORG_NAME"
-
-    workspaces {
-      name = "gcp-infra-dev"
-    }
-  }
 
   required_providers {
     google = {
@@ -17,11 +13,16 @@ terraform {
   }
 }
 
+############################################
+# Google Provider
+############################################
+
 provider "google" {
   project     = var.project_id
   region      = var.region
   credentials = var.google_credentials
 }
+
 
 
 
