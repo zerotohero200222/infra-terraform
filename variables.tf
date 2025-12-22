@@ -1,10 +1,14 @@
+############################################
+# Root Module Variables
+############################################
+
 variable "project_id" {
   description = "GCP Project ID"
   type        = string
 }
 
 variable "region" {
-  description = "GCP region"
+  description = "GCP Region"
   type        = string
 }
 
@@ -13,6 +17,7 @@ variable "google_credentials" {
   type        = string
   sensitive   = true
 }
+
 
 
 
