@@ -13,8 +13,9 @@ provider "google" {
   project     = var.project_id
   region      = var.region
 
-  # CRITICAL: Explicit credentials for Terraform Cloud
+  # FORCE Terraform Cloud to use the variable
   credentials = jsonencode(var.google_credentials)
 }
+
 
 
