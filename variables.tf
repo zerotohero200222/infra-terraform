@@ -9,10 +9,11 @@ variable "region" {
 }
 
 variable "google_credentials" {
-  description = "GCP service account credentials for Terraform Cloud"
+  description = "GCP service account credentials"
   type        = any
   sensitive   = true
 }
+
 
 
 
