@@ -1,5 +1,5 @@
 variable "project_id" {
-  description = "GCP project ID"
+  description = "GCP Project ID"
   type        = string
 }
 
@@ -9,10 +9,11 @@ variable "region" {
 }
 
 variable "google_credentials" {
-  description = "GCP service account credentials"
-  type        = any
+  description = "GCP service account credentials JSON"
+  type        = string
   sensitive   = true
 }
+
 
 
 
