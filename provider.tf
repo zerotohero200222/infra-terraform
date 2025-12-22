@@ -3,10 +3,10 @@ terraform {
 
   # Terraform Cloud Backend
   cloud {
-    organization = "your-org-name"  # Replace with your org name
+    organization = "YOUR_TERRAFORM_CLOUD_ORG"  # 🔴 CHANGE THIS
 
     workspaces {
-      name = "gcp-infra-dev"
+      name = "gcp-infra-dev"                   # 🔴 CHANGE IF NEEDED
     }
   }
 
@@ -18,9 +18,14 @@ terraform {
   }
 }
 
+# ===============================
+# Google Provider Configuration
+# ===============================
 provider "google" {
-  project = var.project_id
-  region  = var.region
-  
-  # Credentials are provided via GOOGLE_CREDENTIALS env var in Terraform Cloud
+  project     = var.project_id
+  region      = var.region
+
+  # 🔐 Credentials provided via Terraform Cloud Variable (HCL)
+  credentials = jsonencode(var.google_credentials)
 }
+
